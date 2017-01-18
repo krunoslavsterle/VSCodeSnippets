@@ -1,0 +1,512 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>FullRepository</Title>
+      <Author>Windows User</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>fullrep</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>ProjectNamespace</ID>
+          <ToolTip>ProjectNamespace name.</ToolTip>
+          <Default>ProjectNamespace</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>RepositoryDescName</ID>
+          <ToolTip>Name of the entity this project defaults.</ToolTip>
+          <Default>EntityName</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>RepositoryName</ID>
+          <ToolTip>Name of the repository</ToolTip>
+          <Default>EntityNameRepository</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>IRepositoryName</ID>
+          <ToolTip>Name of the repository interface.</ToolTip>
+          <Default>IEntityNameRepository</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>EntityName</ID>
+          <ToolTip>Name of the entity this project defaults.</ToolTip>
+          <Default>Project</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>IPocoName</ID>
+          <ToolTip>Name of the poco interface this project defaults.</ToolTip>
+          <Default>IProjectPoco</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp" Delimiter="$"><![CDATA[using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+using PagedList;
+
+namespace $ProjectNamespace$.Repository
+{
+    /// <summary>
+    /// $RepositoryDescName$ repository.
+    /// </summary>
+    public class $RepositoryName$ : $IRepositoryName$
+    {
+        #region Fields
+
+        private readonly IGenericRepository<$EntityName$, $IPocoName$> genericRepository;
+        private readonly IMapper mapper;
+
+        #endregion Fields
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="$RepositoryName$"/> class.
+        /// </summary>
+        /// <param name="genericRepository">The generic repository.</param>
+        /// <param name="mapper">The mapper.</param>
+        public $RepositoryName$(IGenericRepository<$EntityName$, $IPocoName$> genericRepository, IMapper mapper) 
+        {
+            this.genericRepository = genericRepository;
+            this.mapper = mapper;
+        }
+
+        #endregion Constructors
+
+        #region Methods
+        
+        /// <summary>
+        /// Gets a list of all <see cref="$IPocoName$"/> models.
+        /// </summary>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>List of <see cref="$IPocoName$"/> models.</returns>
+        public virtual IEnumerable<$IPocoName$> GetAll(ISortingParameters orderBy = null, params string[] includeProperties)
+        {
+            var entities = genericRepository.GetAll(null, orderBy, includeProperties);
+            return mapper.Map<IEnumerable<$IPocoName$>>(entities);
+        }
+
+        /// <summary>
+        /// Gets a list of all <see cref="$IPocoName$"/> models asynchronously.
+        /// </summary>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>List of <see cref="$IPocoName$"/> models asynchronously.</returns>
+        public virtual async Task<IEnumerable<$IPocoName$>> GetAllAsync(ISortingParameters orderBy = null, params string[] includeProperties)
+        {
+            var entities = await genericRepository.GetAllAsync(null, orderBy, includeProperties);
+            return mapper.Map<IEnumerable<$IPocoName$>>(entities);
+        }
+
+        /// <summary>
+        /// Gets a paged list of all <see cref="$IPocoName$"/> models.
+        /// </summary>
+        /// <param name="pagingParameters">The paging parameters.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>Paged list of all <see cref="$IPocoName$"/> models.</returns>
+        public virtual IPagedList<$IPocoName$> GetAllPaged(IPagingParameters pagingParameters, ISortingParameters orderBy = null, params string[] includeProperties)
+        {
+            int count = genericRepository.GetCount();
+            var entities = genericRepository.GetAll(pagingParameters, orderBy, includeProperties);
+
+            return new StaticPagedList<$IPocoName$>(mapper.Map<IEnumerable<$IPocoName$>>(entities), pagingParameters.PageNumber, pagingParameters.PageSize, count);
+        }
+
+        /// <summary>
+        /// Gets a paged list of all <see cref="$IPocoName$"/> models asynchronously.
+        /// </summary>
+        /// <param name="pagingParameters">The paging parameters.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>Paged list of all <see cref="$IPocoName$"/> models asynchronously.</returns>
+        public virtual async Task<IPagedList<$IPocoName$>> GetAllPagedAsync(IPagingParameters pagingParameters, ISortingParameters orderBy = null, params string[] includeProperties)
+        {
+            int count = await genericRepository.GetCountAsync();
+            var entities = await genericRepository.GetAllAsync(pagingParameters, orderBy, includeProperties);
+
+            return new StaticPagedList<$IPocoName$>(mapper.Map<IEnumerable<$IPocoName$>>(entities), pagingParameters.PageNumber, pagingParameters.PageSize, count);
+        }
+
+        /// <summary>
+        /// Gets the one <see cref="$IPocoName$"/> model asynchronously.
+        /// </summary>
+        /// <param name="filter">The filter expression.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>One <see cref="$IPocoName$"/> asynchronously.</returns>
+        public virtual async Task<$IPocoName$> GetOneAsync(Expression<Func<$IPocoName$, bool>> filter = null, params string[] includeProperties)
+        {
+            var entity = await genericRepository.GetOneAsync(filter, includeProperties);
+            return mapper.Map<$IPocoName$>(entity);
+        }
+
+        /// <summary>
+        /// Gets the one <see cref="$IPocoName$"/> model.
+        /// </summary>
+        /// <param name="filter">The filter expression.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns></returns>
+        public virtual $IPocoName$ GetOne(Expression<Func<$IPocoName$, bool>> filter = null, params string[] includeProperties)
+        {
+            var entity = genericRepository.GetOne(filter, includeProperties);
+            return mapper.Map<$IPocoName$>(entity);
+        }
+        
+        /// <summary>
+        /// Gets the list of <see cref="$IPocoName$"/> models.
+        /// </summary>
+        /// <param name="filter">The filter expression.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>List of <see cref="$IPocoName$"/> models.</returns>
+        public virtual IEnumerable<$IPocoName$> Get(Expression<Func<$IPocoName$, bool>> filter = null, ISortingParameters orderBy = null, params string[] includeProperties)
+        {
+            var entities = genericRepository.Get(null, filter, orderBy, includeProperties);
+            return mapper.Map<IEnumerable<$IPocoName$>>(entities);
+        }
+
+        /// <summary>
+        /// Gets the list of <see cref="$IPocoName$"/> models asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter expression.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>List of <see cref="$IPocoName$"/> models asynchronous.</returns>
+        public virtual async Task<IEnumerable<$IPocoName$>> GetAsync(Expression<Func<$IPocoName$, bool>> filter = null, ISortingParameters orderBy = null, params string[] includeProperties)
+        {
+            var entities = await genericRepository.GetAsync(null, filter, orderBy, includeProperties);
+            return mapper.Map<IEnumerable<$IPocoName$>>(entities);
+        }
+        
+        /// <summary>
+        /// Gets the paged list of <see cref="$IPocoName$"/> models.
+        /// </summary>
+        /// <param name="pagingParameters">The paging parameters.</param>
+        /// <param name="filter">The filter expression.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>Paged list of <see cref="$IPocoName$"/> models.</returns>
+        public virtual IPagedList<$IPocoName$> GetPaged(IPagingParameters pagingParameters, Expression<Func<$IPocoName$, bool>> filter = null, ISortingParameters orderBy = null, params string[] includeProperties)
+        {
+            var count = genericRepository.GetCount();
+            var entities = genericRepository.Get(pagingParameters, filter, orderBy, includeProperties);
+
+            return new StaticPagedList<$IPocoName$>(mapper.Map<IEnumerable<$IPocoName$>>(entities), pagingParameters.PageNumber, pagingParameters.PageSize, count);
+        }
+
+        /// <summary>
+        /// Gets the paged list of <see cref="$IPocoName$"/> models asynchronous.
+        /// </summary>
+        /// <param name="pagingParameters">The paging parameters.</param>
+        /// <param name="filter">The filter expression.</param>
+        /// <param name="orderBy">The order by.</param>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>Paged list of <see cref="$IPocoName$"/> models asynchronous.</returns>
+        public virtual async Task<IPagedList<$IPocoName$>> GetPagedAsync(IPagingParameters pagingParameters, Expression<Func<$IPocoName$, bool>> filter = null, ISortingParameters orderBy = null, params string[] includeProperties)
+        {
+            var count = await genericRepository.GetCountAsync();
+            var entities = await genericRepository.GetAsync(pagingParameters, filter, orderBy, includeProperties);
+
+            return new StaticPagedList<$IPocoName$>(mapper.Map<IEnumerable<$IPocoName$>>(entities), pagingParameters.PageNumber, pagingParameters.PageSize, count);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="$IPocoName$"/> model by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns><see cref="$IPocoName$"/>.</returns>
+        public virtual $IPocoName$ GetById(Guid id)
+        {
+            var entity = genericRepository.GetById(id);
+            return mapper.Map<$IPocoName$>(entity);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="$IPocoName$"/> model by identifier asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns><see cref="$IPocoName$"/>.</returns>
+        public virtual async Task<$IPocoName$> GetByIdAsync(Guid id)
+        {
+            var entity = await genericRepository.GetByIdAsync(id);
+            return mapper.Map<$IPocoName$>(entity);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="$IPocoName$"/> count.
+        /// </summary>
+        /// <param name="filter">The filter expression.</param>
+        /// <returns><see cref="$IPocoName$"/> count.</returns>
+        public virtual int GetCount(Expression<Func<$IPocoName$, bool>> filter = null)
+        {
+            return genericRepository.GetCount(filter);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="$IPocoName$"/> count asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter expression.</param>
+        /// <returns><see cref="$IPocoName$"/> count asynchronous.</returns>
+        public virtual Task<int> GetCountAsync(Expression<Func<$IPocoName$, bool>> filter = null)
+        {
+            return genericRepository.GetCountAsync(filter);
+        }
+
+        /// <summary>
+        /// Checks if sequence in filter contains entities.
+        /// </summary>
+        /// <param name="filter">The filter expression.</param>
+        /// <returns>True if sequence contains at least one entity.</returns>
+        public virtual bool GetIsExists(Expression<Func<$IPocoName$, bool>> filter = null)
+        {
+            return genericRepository.GetIsExists(filter);
+        }
+
+        /// <summary>
+        /// Checks if sequence in filter contains entities asynchronous.
+        /// </summary>
+        /// <param name="filter">The filter expression.</param>
+        /// <returns>True if sequence contains at least one entity.</returns>
+        public virtual Task<bool> GetIsExistsAsync(Expression<Func<$IPocoName$, bool>> filter = null)
+        {
+            return genericRepository.GetIsExistsAsync(filter);
+        }
+
+        /// <summary>
+        /// Inserts the specified <see cref="$IPocoName$"/> model into the database.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual void Insert($IPocoName$ model)
+        {
+            genericRepository.Insert(mapper.Map<$EntityName$>(model));
+            genericRepository.Save();
+        }
+
+        /// <summary>
+        /// Inserts the list of <see cref="$IPocoName$"/> models into the database.
+        /// </summary>
+        /// <param name="models">The list of models.</param>
+        public virtual void Insert(IList<$IPocoName$> models)
+        {
+            var entities = mapper.Map<List<$EntityName$>>(models);
+            entities.ForEach(p => genericRepository.Insert(p));
+            genericRepository.Save();
+        }
+
+        /// <summary>
+        /// Inserts the specified <see cref="$IPocoName$"/> model into the database asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual System.Threading.Tasks.Task InsertAsync($IPocoName$ model)
+        {
+            genericRepository.Insert(mapper.Map<$EntityName$>(model));
+            return genericRepository.SaveAsync();
+        }
+
+        /// <summary>
+        /// Inserts the list of <see cref="$IPocoName$"/> models into the database asynchronous.
+        /// </summary>
+        /// <param name="models">The list of models.</param>
+        public virtual System.Threading.Tasks.Task InsertAsync(IList<$IPocoName$> models)
+        {
+            var entities = mapper.Map<List<$EntityName$>>(models);
+            entities.ForEach(p => genericRepository.Insert(p));
+            return genericRepository.SaveAsync();
+        }
+
+        /// <summary>
+        /// Updates the specified <see cref="$IPocoName$"/> model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual void Update($IPocoName$ model)
+        {
+            genericRepository.Update(mapper.Map<$EntityName$>(model));
+            genericRepository.Save();
+        }
+
+        /// <summary>
+        /// Updates the list of <see cref="$IPocoName$"/> models.
+        /// </summary>
+        /// <param name="model">The list of models.</param>
+        public virtual void Update(IList<$IPocoName$> models)
+        {
+            var entities = mapper.Map<List<$EntityName$>>(models);
+            entities.ForEach(p => genericRepository.Update(p));
+            genericRepository.Save();
+        }
+
+        /// <summary>
+        /// Updates the specified <see cref="$IPocoName$"/> model asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual System.Threading.Tasks.Task UpdateAsync($IPocoName$ model) 
+        {
+            genericRepository.Update(mapper.Map<$EntityName$>(model));
+            return genericRepository.SaveAsync();
+        }
+
+        /// <summary>
+        /// Updates the list of <see cref="$IPocoName$"/> models asynchronous.
+        /// </summary>
+        /// <param name="model">The list of models.</param>
+        public virtual System.Threading.Tasks.Task UpdateAsync(IList<$IPocoName$> models)
+        {
+            var entities = mapper.Map<List<$EntityName$>>(models);
+            entities.ForEach(p => genericRepository.Update(p));
+            return genericRepository.SaveAsync();
+        }
+
+        /// <summary>
+        /// Deletes model by id.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public virtual void Delete(Guid id)
+        {
+            genericRepository.Delete(id);
+            genericRepository.Save();
+        }
+
+        /// <summary>
+        /// Deletes models by the list of ids.
+        /// </summary>
+        /// <param name="ids">The list of identifiers.</param>
+        public virtual void Delete(IList<Guid> ids)
+        {
+            ids.ToList().ForEach(p => genericRepository.Delete(p));
+            genericRepository.Save();
+        }
+
+        /// <summary>
+        /// Deletes model by id asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public virtual System.Threading.Tasks.Task DeleteAsync(Guid id)
+        {
+            genericRepository.Delete(id);
+            return genericRepository.SaveAsync();
+        }
+
+        /// <summary>
+        /// Deletes models by the list of ids asynchronous.
+        /// </summary>
+        /// <param name="ids">The list of identifiers.</param>
+        public virtual System.Threading.Tasks.Task DeleteAsync(IList<Guid> ids)
+        {
+            ids.ToList().ForEach(p => genericRepository.Delete(p));
+            return genericRepository.SaveAsync();
+        }
+
+        /// <summary>
+        /// Deletes the specified <see cref="$IPocoName$"/> model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual void Delete($IPocoName$ model)
+        {
+            genericRepository.Delete(mapper.Map<$EntityName$>(model));
+            genericRepository.Save();
+        }
+
+        /// <summary>
+        /// Deletes the list of models.
+        /// </summary>
+        /// <param name="models">The list of models.</param>
+        public virtual void Delete(IList<$IPocoName$> models)
+        {
+            var entities = mapper.Map<List<$EntityName$>>(models);
+            entities.ForEach(p => genericRepository.Delete(p));
+            genericRepository.Save();
+        }
+        
+        /// <summary>
+        /// Deletes the specified <see cref="$IPocoName$"/> model asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual System.Threading.Tasks.Task DeleteAsync($IPocoName$ model)
+        {
+            genericRepository.Delete(mapper.Map<$EntityName$>(model));
+            return genericRepository.SaveAsync();
+        }
+
+        /// <summary>
+        /// Deletes the list of models.
+        /// </summary>
+        /// <param name="models">The list of models.</param>
+        public virtual System.Threading.Tasks.Task DeleteAsync(IList<$IPocoName$> models)
+        {
+            var entities = mapper.Map<List<$EntityName$>>(models);
+            entities.ForEach(p => genericRepository.Delete(p));
+            return genericRepository.SaveAsync();
+        }
+
+        /// <summary>
+        /// Adds <see cref="$IPocoName$"/> model for insert. This will not call Save() method.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual void AddForInset($IPocoName$ model)
+        {
+            genericRepository.Insert(mapper.Map<$EntityName$>(model));
+        }
+
+        /// <summary>
+        /// Adds <see cref="$IPocoName$"/> model for update. This will not call Save() method.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual void AddForUpdate($IPocoName$ model)
+        {
+            genericRepository.Update(mapper.Map<$EntityName$>(model));
+        }
+
+        /// <summary>
+        /// Adds <see cref="$IPocoName$"/> model for delete. This will not call Save() method.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual void AddForDelete($IPocoName$ model)
+        {
+            genericRepository.Delete(model);
+        }
+
+        /// <summary>
+        /// Saves the context changes.
+        /// </summary>
+        public virtual void Save()
+        {
+            genericRepository.Save();
+        }
+
+        /// <summary>
+        /// Saves the context changes asynchronous.
+        /// </summary>
+        public virtual System.Threading.Tasks.Task SaveAsync()
+        {
+            return genericRepository.SaveAsync();
+        }
+
+        #endregion Methods
+    }
+}
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
